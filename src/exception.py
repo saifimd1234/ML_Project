@@ -19,10 +19,12 @@ Usage:
 # any exception that is controlled, sys is used to get the exception, it has the error message
 # and the error code
 import sys
+import logging
+import traceback
 
 def error_message_detail(error, error_detail: sys):
     # Extract the traceback object from the error details
-    _, _, exc_tb = error_detail.exc_info()
+    exc_type, exc_obj, exc_tb = sys.exc_info()
     
     # Get the filename where the error occurred
     file_name = exc_tb.tb_frame.f_code.co_filename
@@ -50,7 +52,15 @@ class CustomException(Exception):
         # Set the error message attribute by calling the error_message_detail function
         # This function formats the error message with additional details
         self.error_message = error_message_detail(error_message, error_detail=error_detail)
+        self.traceback = traceback.format_exc()
 
     def __str__(self):
         # Return the formatted error message when the exception is converted to a string
-        return self.error_message
+        return f"{self.error_message}\nTraceback:\n{self.traceback}"
+
+if __name__ == "__main__":
+    try:
+        a=1/0
+    except Exception as e:
+        logging.info("Divide by Zero error.")
+        raise CustomException(e, sys)
