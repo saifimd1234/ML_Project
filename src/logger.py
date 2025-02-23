@@ -40,3 +40,7 @@ logging.basicConfig(
     level=logging.INFO,  # Set the logging level to INFO
     filemode='a'  # Append to the log file if it exists
 )
+
+if __name__ == "__main__":
+    # Log a sample message with INFO level
+    logging.info("Loggin has.")
