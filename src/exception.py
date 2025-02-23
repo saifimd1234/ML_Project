@@ -17,9 +17,19 @@ Usage:
     informative.
 """
 import os
+from datetime import datetime
 import sys
 import logging
 import traceback
+
+# Create a log file name based on the current date and time
+LOG_FILE = f"{datetime.now().strftime('%d_%m_%Y_%H_%M_%S')}.log"
+
+# Define the path where the log file will be stored
+logs_path = os.path.join(os.getcwd(), 'logs', LOG_FILE)
+
+# Create the directory for logs if it doesn't exist
+os.makedirs(logs_path, exist_ok=True)
 
 # Configure logging
 LOGS_FILE_PATH = os.path.join(logs_path, LOG_FILE)
