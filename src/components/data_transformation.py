@@ -27,6 +27,7 @@ from src.exception import CustomException
 from src.logger import logging
 import os
 
+from src.utils import save_object # it is used to store the pickle file
 
 @dataclass
 class DataTransformationConfig:
@@ -122,7 +123,12 @@ class DataTransformation:
 
             logging.info(f"Saved preprocessing object.")
 
+            save_object(
 
+                file_path=self.data_transformation_config.preprocessor_obj_file_path,
+                obj=preprocessing_obj
+
+            )
 
             return (
                 train_arr,
