@@ -22,6 +22,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
 
+from src.components.data_transformation import DataTransformationConfig, DataTransformation
 @dataclass
 class DataIngestionConfig:
     """
@@ -32,8 +33,8 @@ class DataIngestionConfig:
     raw_data_path: str = os.path.join('artifact', "raw_data.csv")
 
 class DataIngestion:
-    def __init__(self, config: DataIngestionConfig):
-        self.ingestion_config = config  # Use the provided config instead of creating a new one
+    def __init__(self):
+        self.ingestion_config = DataIngestionConfig() 
 
     def initiate_data_ingestion(self):
         logging.info("Entered the data ingestion method or component")
@@ -56,8 +57,7 @@ class DataIngestion:
 
             return (
                 self.ingestion_config.train_data_path,
-                self.ingestion_config.test_data_path,
-                self.ingestion_config.raw_data_path,
+                self.ingestion_config.test_data_path
             )
 
         except Exception as e:
@@ -65,6 +65,10 @@ class DataIngestion:
             raise CustomException(e, sys)
 
 if __name__ == "__main__":
-    config = DataIngestionConfig()
-    data_ingestion = DataIngestion(config)
-    data_ingestion.initiate_data_ingestion()
+    data_ingestion = DataIngestion()
+    train_data, test_data = data_ingestion.initiate_data_ingestion()
+
+    data_transformation = DataTransformation()
+    data_transformation.initiate_data_transformation(train_data, test_data)
+    
+    
