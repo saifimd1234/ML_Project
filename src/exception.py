@@ -17,22 +17,47 @@ Usage:
     informative.
 """
 import sys
+import traceback
 from src.logger import logging
+import logging
 
-def error_message_detail(error,error_detail:sys):
-    _,_,exc_tb=error_detail.exc_info()
-    file_name=exc_tb.tb_frame.f_code.co_filename
-    error_message="Error occured in python script name [{0}] line number [{1}] error message[{2}]".format(
-     file_name,exc_tb.tb_lineno,str(error))
+# Configure logging to write to a file
+logging.basicConfig(filename='/c:/Users/saifi/GitHub/ML_Project/logs/error.log',
+                    level=logging.INFO,
+                    format='%(asctime)s %(levelname)s %(message)s')
 
+def error_message_detail(error, error_detail):
+    # Extract the traceback object from the error details
+    exc_type, exc_obj, exc_tb = error_detail
+    
+    # Get the filename where the error occurred
+    file_name = exc_tb.tb_frame.f_code.co_filename
+    
+    # Get the line number where the error occurred
+    line_number = exc_tb.tb_lineno
+    
+    # Create an error message string with the filename, line number, and error message
+    error_message = f"Error occurred in file: {file_name} at line: {line_number} - {str(error)}"
+    
+    # Print the error message to the console
+    print(error_message)
+    
+    # Return the error message string
     return error_message
 
-    
-
 class CustomException(Exception):
-    def __init__(self,error_message,error_detail:sys):
+    """
+    Base class for custom exceptions in the machine learning project.
+    """
+    def __init__(self, error_message, error_detail):
+        # Call the base class constructor with the error message
         super().__init__(error_message)
-        self.error_message=error_message_detail(error_message,error_detail=error_detail)
-    
+        
+        # Set the error message attribute by calling the error_message_detail function
+        # This function formats the error message with additional details
+        self.error_message = error_message_detail(error_message, error_detail=error_detail)
+        self.traceback = traceback.format_exc()
+
     def __str__(self):
-        return self.error_message
+        # Return the formatted error message when the exception is converted to a string
+        return f"{self.error_message}\nTraceback:\n{self.traceback}"
