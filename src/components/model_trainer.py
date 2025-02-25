@@ -35,14 +35,26 @@ from src.utils import evaluate_models
 
 @dataclass
 class ModelTrainerConfig:  # this will give whatever input we require w.r.t model training
+    """Configuration class for model training."""
     trained_model_file_path=os.path.join("artifacts","model.pkl")
 
 class ModelTrainer:   # responsible for training the model
+    """Class responsible for training machine learning models."""
     def __init__(self):
         self.model_trainer_config=ModelTrainerConfig()  # inside self.model_trainer_config we will be getting the above variable path name (trained_model_file_path)
 
 
     def initiate_model_trainer(self,train_array,test_array):  # this function will be responsible for training the model. The train and test array comes from data transformation
+        """
+        Trains multiple machine learning models and selects the best one based on R2 score.
+
+        Args:
+            train_array (np.ndarray): Training data array.
+            test_array (np.ndarray): Testing data array.
+
+        Returns:
+            float: R2 score of the best model.
+        """
         try:
             logging.info("Split training and test input data")
             X_train, y_train, X_test, y_test = (
@@ -113,6 +125,7 @@ class ModelTrainer:   # responsible for training the model
             ]
             # Alternative:
             # best_model_name = next(key for key, value in model_report.items() if value == best_model_score)
+            # Used a generator expression (next) to find the best model name more efficiently.
 
             best_model = models[best_model_name]
 
