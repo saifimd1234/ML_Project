@@ -32,9 +32,18 @@ import numpy as np
 import pandas as pd
 
 from sklearn.metrics import r2_score
+from sklearn.model_selection import GridSearchCV
+
 from src.exception import CustomException
 
 def save_object(file_path, obj):
+    """
+    Saves an object to the specified file path using dill.
+
+    Args:
+        file_path (str): Path to save the object.
+        obj: Object to be saved.
+    """
     try:
         dir_path = os.path.dirname(file_path)
         os.makedirs(dir_path, exist_ok=True)
@@ -46,6 +55,20 @@ def save_object(file_path, obj):
         raise CustomException(e, sys)
     
 def evaluate_models(X_train, y_train,X_test,y_test,models,param):
+    """
+    Evaluates multiple machine learning models using GridSearchCV.
+
+    Args:
+        X_train: Training features.
+        y_train: Training target.
+        X_test: Testing features.
+        y_test: Testing target.
+        models: Dictionary of models to evaluate.
+        param: Dictionary of hyperparameters for each model.
+
+    Returns:
+        dict: A dictionary containing model names as keys and their R2 scores as values.
+    """
     try:
         report = {}
 
@@ -53,7 +76,13 @@ def evaluate_models(X_train, y_train,X_test,y_test,models,param):
             model = list(models.values())[i]
             para=param[list(models.keys())[i]]
 
-            model.fit(X_train,y_train) # train the model
+            gs = GridSearchCV(model,para,cv=3) # you can also apply randomSearchCV
+            gs.fit(X_train,y_train)  # to select the best parameter
+
+            model.set_params(**gs.best_params_)  # set the best parameter to the model
+            model.fit(X_train,y_train)
+
+            # model.fit(X_train,y_train) # train the model
 
             y_train_pred = model.predict(X_train)
 
