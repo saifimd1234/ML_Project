@@ -21,12 +21,9 @@ import traceback
 from src.logger import logging
 import logging
 
-# Configure logging to write to a file
-logging.basicConfig(filename='/c:/Users/saifi/GitHub/ML_Project/logs/error.log',
-                    level=logging.INFO,
-                    format='%(asctime)s %(levelname)s %(message)s')
 
-def error_message_detail(error, error_detail):
+
+def error_message_detail(error, error_detail:sys):
     """
     Extract detailed error information from the traceback.
 
@@ -37,8 +34,7 @@ def error_message_detail(error, error_detail):
     Returns:
         str: A formatted error message with file name, line number, and error details.
     """
-
-    exc_type, exc_obj, exc_tb = error_detail
+    exc_type, exc_obj, exc_tb = error_detail  # Correctly unpack the error detail
     
     # Get the filename where the error occurred
     file_name = exc_tb.tb_frame.f_code.co_filename
@@ -50,7 +46,7 @@ def error_message_detail(error, error_detail):
     error_message = f"Error occurred in file: {file_name} at line: {line_number} - {str(error)}"
     
     # Print the error message to the console
-    print(error_message)
+    # print(error_message)
     
     # Return the error message string
     return error_message
@@ -59,7 +55,7 @@ class CustomException(Exception):
     """
     Base class for custom exceptions in the machine learning project.
     """
-    def __init__(self, error_message, error_detail):
+    def __init__(self, error_message, error_detail:sys):
         """
         Initialize the custom exception.
 
@@ -71,7 +67,7 @@ class CustomException(Exception):
         
         # Set the error message attribute by calling the error_message_detail function
         # This function formats the error message with additional details
-        
+
         self.error_message = error_message_detail(error_message, error_detail=error_detail)
         self.traceback = traceback.format_exc()
 
