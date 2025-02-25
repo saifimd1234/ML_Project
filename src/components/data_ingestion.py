@@ -37,10 +37,19 @@ class DataIngestionConfig:
     raw_data_path: str = os.path.join('artifacts', "raw_data.csv")
 
 class DataIngestion:
+    """Class responsible for ingesting raw data into the system."""
+
     def __init__(self):
         self.ingestion_config = DataIngestionConfig() 
 
     def initiate_data_ingestion(self):
+        """
+        Ingests raw data from a CSV file and splits it into training and testing datasets.
+
+        Returns:
+            tuple: Paths to the training and testing datasets.
+        """
+
         logging.info("Entered the data ingestion method or component")
 
         try:
