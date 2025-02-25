@@ -27,6 +27,7 @@ Usage:
 import os
 import sys
 import dill
+import pickle
 
 import numpy as np
 import pandas as pd
@@ -100,5 +101,24 @@ def evaluate_models(X_train, y_train,X_test,y_test,models,param):
 
         return report
 
+    except Exception as e:
+        raise CustomException(e, sys)
+    
+def load_object(file_path):
+    """
+    Load a serialized object from a file using pickle.
+    
+    Parameters:
+    file_path (str): The path to the file containing the serialized object, which was previously converted into a byte stream (serialized) and saved.
+    
+    Returns:
+    object: The original object that was converted into a byte stream and stored, now restored back to its usable state (deserialized).
+    
+    Raises:
+    CustomException: If an error occurs during loading.
+    """
+    try:
+        with open(file_path, "rb") as file_obj:
+            return pickle.load(file_obj)
     except Exception as e:
         raise CustomException(e, sys)
